@@ -14,10 +14,7 @@ def schaffer_n1(x):
     list
 
     """
-    f1 = x**2
-    f2 = (x-2)**2
+    f1 = x**2 # type: float
+    f2 = (x-2)**2  # type: float
     return [f1, f2]
-        
-    
-print(VectorFunctions.schaffer_n1(2))
 
