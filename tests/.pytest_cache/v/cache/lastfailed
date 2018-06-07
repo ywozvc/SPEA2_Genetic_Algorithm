@@ -1,4 +1,8 @@
 {
   "test_clustering.py": true,
-  "test_clustering.py::test_cluster_distance": true
+  "test_clustering.py::test_cluster_distance": true,
+  "test_population.py": true,
+  "test_population.py::test_departition": true,
+  "test_population.py::test_merge_partition": true,
+  "test_population.py::test_partition": true
 }

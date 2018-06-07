@@ -4,7 +4,6 @@ class Error(Exception):
 
 class PopulationError(Error):
     def __init__(self, message):
-        super(PopulationError,self).__init__(*args, **kwargs)
         self.message = message
 
 class Partition(list):
@@ -19,14 +18,14 @@ class Partition(list):
     centroid: list
     is the centroid of the partition if it has one
     """
-    def __init__(self):
-        super(Partition, self).__init__(*args, **kwargs)
+    def __init__(self, individual=None):
         self.centroid = None
+        self.append(individual)
 
     def __call__(self):
         return self
         
-class Population:
+class Population(list):
     """
     Description
     ---
@@ -35,9 +34,8 @@ class Population:
     
     """
     def __init__(self):
-        self.individuals = list()#list of individuals
         self.partitioned = False
-        self.centroids_found = False
+        self.centroid_found = False
         """
         partitioning takes a list object of individuals and partitions them
         into a list object of list obects with each internal list object
@@ -57,12 +55,7 @@ class Population:
         """
         return self
 
-    def add_individual(individual):
-        self.individuals.append(individual)
-
-
-    #def remove_individual(individual)
-    def partition_pop(self):
+    def partition_population(self):
         """
         Description
         ---
@@ -75,11 +68,10 @@ class Population:
         self.individuals: list
         list of individuals can be partitioned or unpartitioned
         """
-        singleton_partition = Partition()
-        if(len(self.individuals) > 0):
-            for individual in self.individuals:
-                singleton_partition.append([individual])
-            self.individuals = singleton_partition
+        if(len(self) > 0):
+            for i in range(len(self)):
+                singleton_partition = Partition(self[i])
+                self[i] = singleton_partition
             self.partitioned = True
 
     def departition_pop(self):
@@ -94,23 +86,9 @@ class Population:
         gonna be unpartitioned
         """
         if(self.partitioned):
-            for partition in range(len(self.individuals)):
-                self.individuals[partition] = self.individuals[partition][0]
+            for partition in range(len(self)):
+                self[partition] = self[partition][0]
             self.partitioned = False
-        else:
-            raise PopulationError('population is not partitioned')
-
-
-    def merge_partitions(self,partition1_index, partition2_index):
-        """
-        Description
-        ---
-        take two partitions and merge them into one
-
-        """
-        if(self.partitioned):
-            self.individuals[partition1_index].extend(self.individuals[partition2_index])
-            self.individuals.pop(partition2_index)
         else:
             raise PopulationError('population is not partitioned')
 

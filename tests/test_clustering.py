@@ -1,10 +1,10 @@
-import pytest
 import sys
 sys.path.insert(0,'../')
-from clustering import Clustering as clustering
+import pytest
+import clustering
 import numpy as np
-import population as pop
 from tests.fixtures.population_fixture import init_population_object
+import population
 
 def test_euclidean_metric():
     point1 = 10*np.random.random(size=3)
@@ -25,8 +25,8 @@ def test_euclidean_metric():
         assert clustering.euclidean_metric(n1, n2) > 0
 
 #with random generated individuals to just test the function by itself
-#def test_cluster_distance():#for pytest
-def test_cluster_distance(mu_1, sigma_1, mu_2, sigma_2):#for python test
+def test_cluster_distance():#for pytest
+#def test_cluster_distance(mu_1, sigma_1, mu_2, sigma_2):#for python test
     """
     Description
     ---
@@ -52,9 +52,9 @@ def test_cluster_distance(mu_1, sigma_1, mu_2, sigma_2):#for python test
     the distance between two clusters as calculated by average linkage clustering, also known as UPGMA
 
     """
-    cluster1 = list()
-    cluster2 = list()
     #limit the cardinality to 10 for no reason. just because
+    cluster1 = population.Partition()
+    cluster2 = population.Partition()
     cluster1_cardinality = np.random.randint(low=1, high=10)
     cluster2_cardinality = np.random.randint(low=1, high=10)
   
@@ -62,12 +62,14 @@ def test_cluster_distance(mu_1, sigma_1, mu_2, sigma_2):#for python test
     #create random points to populate the clusters
     #to do, limit the clusters around some normal so they act like clusters
     for i in range(cluster1_cardinality):
+        cluster1.clear()
         cluster1.append(np.random.normal(loc=mu_1,scale=sigma_1,size=3))
     print('test_cluster_distance - cluster 1:')
     print(cluster1)
     print('test_cluster_distance cluster1 cardinality - ', cluster1_cardinality)
     
     for i in range(cluster2_cardinality):
+        cluster2.clear()
         cluster2.append(np.random.normal(loc=mu_2, scale=sigma_2, size=3))
     print('test_cluster_distance - cluster 2:')
     print(cluster2)
@@ -79,7 +81,7 @@ def test_cluster_distance(mu_1, sigma_1, mu_2, sigma_2):#for python test
 #test_cluster_distance(1,0.1, 10,2)
 
 #with imported population object to test interaction 
-def test_cluster_dis_with_pop(init_population_object):
+def test_cluster_distance_with_pop(init_population_object):
     """
     Description
     ---
@@ -92,8 +94,8 @@ def test_cluster_dis_with_pop(init_population_object):
     the population can can be found in the test/fixture folder
     """
     population = init_population_object()
-    population.partition()
-    distance = clustering.cluster_distance(population.individuals[0], population.individuals[1])
+    population.partition_population()
+    distance = clustering.cluster_distance(population[0], population[1])
     print('test_cluster_dis_with_population object', distance)
 #test_cluster_dis_with_pop(init_population_object)
 
@@ -104,17 +106,17 @@ def test_min_distance_clusters(init_population_object):
     find the minimum distance between two clusters
     """
     population = init_population_object()
-    population.partition()
-    closest_clusters = clustering.min_distance_clusters(population.individuals)
+    population.partition_population()
+    closest_clusters = clustering.min_distance_clusters(population)
     print(closest_clusters)
-    print(population.individuals[closest_clusters[0]])
-    print(population.individuals[closest_clusters[1]])
+    print(population[closest_clusters[0]])
+    print(population[closest_clusters[1]])
 
 #test_min_distance_clusters(init_population_object)
 
 def test_cluster_centroid(init_population_object):
     population = init_population_object()
-    centroid = clustering.cluster_centroid(population.individuals)
+    centroid = clustering.cluster_centroid(population)
     print('population centroid is ', centroid[0])
     print('centroid index is ',centroid)
 test_cluster_centroid(init_population_object)
