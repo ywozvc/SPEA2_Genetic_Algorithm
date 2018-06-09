@@ -59,24 +59,22 @@ def cluster_distance(cluster1, cluster2):
     constant = 1.0/(c1_cardinality*c2_cardinality)
     return sum*constant
 
-def min_distance_clusters(partitioned_set):
+def min_distance_clusters(population):
     """
     Description
     ---
-    determines the smallest cluster distance between any two disjoint
-    clusters.
+    find the closest point clusters so as to merge them together.
+    this one part of the process that will consolidate a population that has
+    reached its predetermined maximum size.
 
     Parameters
     ---
-    partitioned_set: list of lists
-    the nondominated population that has reached a size that is larger
-    than the maximum.
+    population: population object
+    population object is an extension of the list object so it has that shit.
     Returns
     ---
     nearest_clusters: list
-    this list has the index of the two clusters in th partitioned_set that are the nearest
-    this index will be used by some other function to merge the points within them together
-    to form a larger cluster.
+    index values [i,k] of the nearest clusters in the population
 
     Notes
     ---
@@ -84,10 +82,10 @@ def min_distance_clusters(partitioned_set):
     """
     min_distance = None
     nearest_clusters = list()
-    penultimate = len(partitioned_set) - 1
+    penultimate = len(population) - 1
     for i in range(penultimate):
-        for j in range(i+1,len(partitioned_set)):
-            d = Clustering.cluster_distance(partitioned_set[i], partitioned_set[j])
+        for j in range(i+1, len(population)):
+            d = Clustering.cluster_distance(population[i], population[j])
             if(min_distance is None):
                 min_distance = d
                 nearest_clusters = [i,j]
@@ -105,7 +103,7 @@ def cluster_centroid(cluster):
 
     Parameters
     ---
-    cluster: list
+    cluster: partition object which is a extension of a list object
     a list of np.float64 np.arrays or any list of numbers
 
     Returns

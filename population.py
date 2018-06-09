@@ -1,4 +1,4 @@
-
+import clustering
 class Error(Exception):
     pass
 
@@ -19,6 +19,9 @@ class Partition(list):
     is the centroid of the partition if it has one
     """
     def __init__(self, individual=None):
+        """
+        initialized with an individual because all paritions start as singletons
+        """
         self.centroid = None
         self.append(individual)
 
@@ -29,13 +32,16 @@ class Population(list):
     """
     Description
     ---
-    populations represent the set of individuals (potential solutions)
-    or the set of nondominated individuals
-    
+    collection of individuals (potential solutions)
+    Parameters
+    ---
+    n_limit: int
+    max population size.
+    n_limit + 1 triggers partitioning, clustering and centroid calculation
     """
-    def __init__(self):
+    def __init__(self, n_limit):
         self.partitioned = False
-        self.centroid_found = False
+        self.n_limit = n_limit
         """
         partitioning takes a list object of individuals and partitions them
         into a list object of list obects with each internal list object
@@ -93,4 +99,10 @@ class Population(list):
             raise PopulationError('population is not partitioned')
 
     
-    
+    def append(self, individual):
+        if(len(self) < self.n_limit):
+            self.append(Partition(individual))
+        else:
+
+
+
